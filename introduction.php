@@ -23,7 +23,6 @@
   $title = "説明";
   $message = "この掲示板では $\TeX$ を利用して数式を書くことができます。$ \\$ $ 〜 $ \\$ $ で数式を囲むとインラインで、$ \\$\\$ $ 〜 $ \\$\\$ $, $\backslash [$ 〜 $\backslash ] $ などで囲むと別の行として数式を表示できます。";
   $message .= "<br /><br />ただし、$\TeX$ のすべての機能が使えるわけではありません。";
-  $message .= "<br /><br />ちなみに作者は、FireFox を使用しています。";
   echo createIntroductionHtml($title, '', '', '', 'black', $message);
   
   $title = '$\TeX$ とは';
@@ -39,6 +38,50 @@
   echo createIntroductionHtml($title, '', '', '', 'black', $message);
   
   $title = '$\TeX$ の書き方';
-  $message = "現在準備中です。ひとまず <a href=\"http://www12.plala.or.jp/ksp/tex/symbol/mathsymbols.html\" target=\"_blank\">物理のかぎしっぽ</a> を参考にしてください。";
+  $message = '本掲示板での式の書き方例を載せています。さらに詳しい書き方については、"TeX" をキーワードに検索してみてください。';
+  $message .= '<h3>式の書き方例</h3><p>簡単な式の書き方を載せています。式を書く際の参考にしてください。</p>';
+  $message .= '
+  <table class="texTable">
+    <thead>
+      <tr><td>式</td><td>$TeX$ での書き方</td></thead>
+    <tbody>
+      <tr><td>$$4 \div 5 \times 3 = \frac{12}{5}$$</td><td>4 \div 5 \times 3 = \frac{12}{5}$</td></tr>
+      <tr><td>$$f(x) = \sqrt[3]{3}x^2 + \pi x - 1$$</td><td>f(x) = \sqrt[3]{3}x^2 + \pi x - 1</td></tr>
+      <tr><td>$$a_{n+1} = a_{n} + 3$$</td><td>a_{n+1} = a_{n} + 3</td></tr>
+      <tr><td>$$\vec{a} = \overrightarrow{OA}$$</td><td>\vec{a} = \overrightarrow{OA}</td></tr>
+      <tr><td>$$\vec{a} \cdot \vec{b} = |\vec{a}| |\vec{b}| \cos \theta$$</td><td>\vec{a} \cdot \vec{b} = |\vec{a}| |\vec{b}| \cos \theta</td></tr>
+    </tbody>
+  </table>';
+  $message .= '<h3>英数字</h3><p>$x$ などの文字や数字は、半角で入力すると表示されます。</p>';
+  $message .= '<h3>ギリシャ文字</h3><p>円周率 $\pi$ などのギリシャ文字は特殊な書き方をします。</p>';
+  $message .= '
+  <table class="texTable">
+    <thead>
+      <tr><td>記号</td><td>日本名</td><td>書き方</td></thead>
+    <tbody>
+      <tr><td>$\alpha$</td><td>アルファ</td><td>\alpha</td></tr>
+      <tr><td>$\beta$</td><td>ベータ</td><td>\beta</td></tr>
+      <tr><td>$\gamma$</td><td>ガンマ</td><td>\gamma</td></tr>
+      <tr><td>$\delta$</td><td>デルタ</td><td>\delta</td></tr>
+      <tr><td>$\theta$</td><td>シータ</td><td>\theta</td></tr>
+      <tr><td>$\pi$</td><td>パイ</td><td>\pi</td></tr>
+      <tr><td>$\sigma$</td><td>シグマ</td><td>\sigma</td></tr>
+    </tbody>
+  </table>';
+  $message .= '
+  <table class="texTable">
+    <thead>
+      <tr><td>記号</td><td>日本名</td><td>書き方</td></thead>
+    <tbody>
+      <tr><td>$A$</td><td>アルファ</td><td>A</td></tr>
+      <tr><td>$B$</td><td>ベータ</td><td>B</td></tr>
+      <tr><td>$\Gamma$</td><td>ガンマ</td><td>\Gamma</td></tr>
+      <tr><td>$\Delta$</td><td>デルタ</td><td>\Delta</td></tr>
+      <tr><td>$\Theta$</td><td>シータ</td><td>\Theta</td></tr>
+      <tr><td>$\Pi$</td><td>パイ</td><td>\Pi</td></tr>
+      <tr><td>$\Sigma$</td><td>シグマ</td><td>\Sigma</td></tr>
+    </tbody>
+  </table>';
+
   echo createIntroductionHtml($title, '', '', '', 'black', $message);
 ?>

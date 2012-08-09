@@ -42,6 +42,20 @@ class ConstText {
   const PasswordSalt = 'ad4GsdbW2hnyDVNUkisighgR78';
 }
 
+function metaTags($title) {
+  $code = '
+  <meta charset="utf-8" />
+  <meta name="description" content="数式の表示できる数学掲示板。TeX の文法を使って、数式を表示することができます。ぜひご活用ください。" />';
+  if (isset($title)) {
+    $code .= '
+  <meta name="keywords" content="'.$title.',数式,数学,質問,掲示板,問題,教育,学習,練習,TeX,LaTeX" />';
+  } else {
+    $code .= '
+  <meta name="keywords" content="数式,数学,質問,掲示板,問題,教育,学習,練習,TeX,LaTeX" />';
+  }
+  return $code;
+}
+
 function createPager($page_number, $item_count, $items_a_page, $pagers_a_page, $html_param) {
   $pager_count = ceil($item_count / $items_a_page);
   $start_pager = (ceil($page_number / $pagers_a_page) - 1) * $pagers_a_page + 1;
