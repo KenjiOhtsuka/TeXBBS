@@ -43,6 +43,7 @@ require_once('constants.php');
 require_once('connection.php');
 
 $title = '';
+$keyword = '';
 $input_type = InputType::None;
 if (isset($_GET[GetParam::TopicId]) && ctype_digit($_GET[GetParam::TopicId])) {
   $topic_id = $_GET[GetParam::TopicId];
@@ -61,6 +62,7 @@ if (isset($_GET[GetParam::TopicId]) && ctype_digit($_GET[GetParam::TopicId])) {
   if (!$rowsForm) {
     echo mysql_error();
   } else if ($rowForm = mysql_fetch_array($rowsForm)) {
+    $keyword = $rowForm['title'];
     $title = $rowForm['title'] . ' - ';
   }
   if (isset($_GET[GetParam::Mode]) && $_GET[GetParam::Mode] == ModeType::Edit) {
@@ -79,7 +81,7 @@ if (isset($_GET[GetParam::TopicId]) && ctype_digit($_GET[GetParam::TopicId])) {
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<?php include('meta.php'); ?>
+<?php echo metaTags($keyword); ?>
   <title><?php echo $title.ConstText::BBStitle; ?></title>
 <?php
   include('headerScript.php');
@@ -90,10 +92,15 @@ if (isset($_GET[GetParam::TopicId]) && ctype_digit($_GET[GetParam::TopicId])) {
   <h1><a href="<?php echo $_SERVER['PHP_SELF'];?>"><?php echo ConstText::BBStitle; ?></a></h1>
 <?php
   include('headerPanel.php');
-  require('inputArea.php');
+  if ($pattern !== PageType::Summery) {
+    require('inputArea.php');
+  }
   include('centerAdSense.php');
 ?>
-  <hr />
-<?php require('list.php'); ?>
+  <hr /><br />
+<?php
+  require('list.php');
+  include('headerPanel.php');
+?>
 </body>
 </html>

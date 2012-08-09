@@ -122,7 +122,6 @@ switch ($pattern) {
       echo createTopicHtml($topic_id, $rowHead['title'], $rowHead['writer'], 
                          $rowHead['twitter_id'], $rowHead['mixi_id'], $rowHead['facebook_id'], 
                          $rowHead['color'], nl2br($rowHead['message']), $rowHead['created'], $rowHead['modified']);
-
       $sqlPost = "SELECT BBSposts.id post_id, BBSposts.writer,"
                 ."BBSposts.title, BBSposts.message, BBSposts.twitter_id,"
                 ."BBSposts.mixi_id, BBSposts.facebook_id, BBSposts.url,"
@@ -203,7 +202,7 @@ switch ($pattern) {
     $sqlHead = "SELECT BBSposts.topic_id, BBSposts.id post_id, BBSposts.writer,"
               ."BBSposts.title, BBSposts.message, BBSposts.twitter_id,"
               ."BBSposts.mixi_id, BBSposts.facebook_id, BBSposts.url,"
-              ."BBSposts.color, BBSposts.modified ";
+              ."BBSposts.color, BBSposts.created, BBSposts.modified ";
     $sqlHead .= "FROM BBStopics "
                ."JOIN BBSposts ON BBSposts.topic_id = BBStopics.id AND BBSposts.id = 0 "
                ."WHERE BBStopics.id = {$topic_id}";
@@ -223,7 +222,7 @@ switch ($pattern) {
       $sqlPost = "SELECT BBSposts.id post_id, BBSposts.writer,"
                 ."BBSposts.title, BBSposts.message, BBSposts.twitter_id,"
                 ."BBSposts.mixi_id, BBSposts.facebook_id, BBSposts.url,"
-                ."BBSposts.color, BBSposts.modified ";
+                ."BBSposts.color, BBSposts.created, BBSposts.modified ";
       $sqlPost .= "FROM BBSposts WHERE BBSposts.topic_id = {$topic_id} "
                  ."AND BBSposts.id != 0 "
                  ."ORDER BY BBSposts.id DESC LIMIT {$n}, ".(string)ConstParam::TopicCommentCount;

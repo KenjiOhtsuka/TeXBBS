@@ -189,3 +189,27 @@ input#writer {
 .DirectInput {
   ime-mode:disabled;
 }
+.texTable {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.texTable td {
+  border: solid;
+  border-width: 1px;
+  padding: 0px 3px;
+}
+.texTable thead td {
+  text-align: center;
+}
+.texTable tr td {
+  border: solid;
+  border-width: 1px;
+}
+.texTable tr td:first-child {
+  text-align: center;
+}
+.texTable tr:nth-child(odd) {
+}
+.texTable tr:nth-child(even) {
+}
+
