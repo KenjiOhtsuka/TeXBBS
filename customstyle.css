@@ -1,14 +1,14 @@
 body {
-  background-color:#535877  ;
+  background-color: black;
   font-size: 14px;
 }
 h1 {
   text-align: center;
-  color: white;
+  color: DarkGray;
 }
 h1 a {
   text-decoration: none;
-  color: white;
+  color: DarkGray;
 }
 h2, h3 {
   font-size: 14px;
