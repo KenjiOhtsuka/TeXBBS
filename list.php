@@ -64,7 +64,7 @@ switch ($pattern) {
                                $rowPost['color'], nl2br($rowPost['message']), $rowPost['created'], $rowPost['modified'])
               .$html;
       }
-      if ($rowHead['id_count'] > ConstParam::BoardTopicCommentCount) {
+      if ($rowHead['id_count'] > ConstParam::BoardTopicCommentCount + 1) {
         $html = "<div style=\"text-align:center;\">(コメント一部省略)</div>".$html;
       }
       echo $html;
