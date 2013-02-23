@@ -45,7 +45,7 @@
     <thead>
       <tr><td>式</td><td>$TeX$ での書き方</td></thead>
     <tbody>
-      <tr><td>$$4 \div 5 \times 3 = \frac{12}{5}$$</td><td>4 \div 5 \times 3 = \frac{12}{5}$</td></tr>
+      <tr><td>$$4 \div 5 \times 3 = \frac{12}{5}$$</td><td>4 \div 5 \times 3 = \frac{12}{5}</td></tr>
       <tr><td>$$f(x) = \sqrt[3]{3}x^2 + \pi x - 1$$</td><td>f(x) = \sqrt[3]{3}x^2 + \pi x - 1</td></tr>
       <tr><td>$$a_{n+1} = a_{n} + 3$$</td><td>a_{n+1} = a_{n} + 3</td></tr>
       <tr><td>$$\vec{a} = \overrightarrow{OA}$$</td><td>\vec{a} = \overrightarrow{OA}</td></tr>
