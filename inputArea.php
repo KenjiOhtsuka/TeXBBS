@@ -83,15 +83,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sqlPost = "UPDATE BBSposts SET writer = '{$writer}', title = '{$title}', "
                       ."title = '{$title}', message = '{$message}', "
                       ."twitter_id = '{$twitter_id}', mixi_id = '{$mixi_id}', facebook_id = '{$facebook_id}', "
-                      ."color = '{$color}', modified = now() "
-                      ."WHERE topic_id = {$topic_id} and id = {$post_id} and password = '{$password}'";
+                      ."color = '{$color}', modified = NOW() + INTERVAL 14 HOUR "
+                      ."WHERE topic_id = {$topic_id} AND id = {$post_id} AND password = '{$password}'";
             if (!mysql_query($sqlPost)) {
               echo mysql_error();
               $error_mesage .= "更新に失敗しました。<br />";
               break;
             }
             if ($error_message == '') {
-              $sqlPost = "UPDATE BBStopics SET updated = now() WHERE id = {$topic_id}";
+              $sqlPost = "UPDATE BBStopics SET updated = now() + INTERVAL 14 HOUR WHERE id = {$topic_id}";
               if (!mysql_query($sqlPost)) {
                 echo mysql_error();
                 $error_message .= "トピック時刻更新に失敗しました。";
@@ -122,13 +122,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       ."created) ";
             $sqlPost .= "VALUES({$post_id}, {$topic_id}, '{$writer}', '{$title}', '{$message}', "
                       ."'{$twitter_id}', '{$mixi_id}', '{$facebook_id}', '{$url}', '{$color}', "
-                      ."'{$password}', now())";
+                      ."'{$password}', now() + INTERVAL 14 HOUR)";
             if (!mysql_query($sqlPost)) {
               echo mysql_error();
               $error_message .= "投稿に失敗しました。<br />";
               break;
             }
-            $sqlPost = "UPDATE BBStopics SET updated = now() WHERE id = {$topic_id}";
+            $sqlPost = "UPDATE BBStopics SET updated = now() + INTERVAL 14 HOUR WHERE id = {$topic_id}";
             if (!mysql_query($sqlPost)) {
               echo mysql_error();
               $error_message .= "トピック時刻更新に失敗しました。<br />";
@@ -138,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           break;
 
         case PostType::Topic:
-          if (!mysql_query("INSERT INTO BBStopics(updated) VALUES(now())")) {
+          if (!mysql_query("INSERT INTO BBStopics(updated) VALUES(now() + INTERVAL 14 HOUR)")) {
             //die(mysql_error());
             $error_message .= "データベースエラーが発生しました。";
           }
@@ -161,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       ."created) ";
             $sqlPost .= "VALUES(0, {$topic_id}, '{$writer}', '{$title}', '{$message}', "
                       ."'{$twitter_id}', '{$mixi_id}', '{$facebook_id}', '{$url}', '{$color}', "
-                      ."'{$password}', now())";
+                      ."'{$password}', now() + INTERVAL 14 HOUR)";
             if (!mysql_query($sqlPost)) {
               echo mysql_error();
               mysql_query("DELETE FROM BBStopics WHERE id = {$topic_id}");
