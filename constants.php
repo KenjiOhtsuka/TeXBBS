@@ -107,7 +107,7 @@ function createSocialLink($twitter_id = '', $mixi_id = '', $facebook_id = '', $t
 
 function createCommentHtml($topic_id, $post_id, $title, $writer, $twitter_id, $mixi_id, $facebook_id, $color = 'black', $message, $created, $modified) {
   if (!empty($modified)) {
-    $datatime = $modified;
+    $datetime = $modified;
   } else {
     $datetime = $created;
   }
@@ -121,7 +121,6 @@ function createCommentHtml($topic_id, $post_id, $title, $writer, $twitter_id, $m
   $html .= "    <hr />\n";
   $html .= "    <div class=\"message\" style=\"color:{$color};\">{$message}</div>\n";
   $html .= "    <div class=\"footLink\"><a href=\"{$_SERVER['PHP_SELF']}?".GetParam::TopicId."={$topic_id}&".GetParam::PostId."={$post_id}&".GetParam::Mode."=".ModeType::Edit."\">編集</a>　<a href=\"{$_SERVER['PHP_SELF']}?".GetParam::TopicId."={$topic_id}&".GetParam::PostId."={$post_id}\">コメント</a></div>\n";
-//  $html .= "    <div class=\"footLink\"><a href=\"{$_SERVER['PHP_SELF']}?".GetParam::TopicId."={$topic_id}&id={$post_id}\">コメント</a></div>\n";
   $html .= "  </div>\n";
   return $html;
 }
