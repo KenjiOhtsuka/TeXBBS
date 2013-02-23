@@ -126,7 +126,7 @@ function createCommentHtml($topic_id, $post_id, $title, $writer, $twitter_id, $m
 }
 function createTopicHtml($topic_id, $title, $writer, $twitter_id, $mixi_id, $facebook_id, $color = 'black', $message, $created, $modified) {
   if (!empty($modified)) {
-    $datatime = $modified;
+    $datetime = $modified;
   } else {
     $datetime = $created;
   }
