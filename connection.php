@@ -1,12 +1,12 @@
 <?php
 session_start();
-  $DB = "db_name";
-  $myCon = mysql_connect(
+  $DB = "math_bbs";
+  $myCon = mysqli_connect(
     'localhost',
     'root', 
-    'password'
+    'root'
   );
   if ($myCon == false) die("Connection failed.");
-  if (!mysql_select_db($DB, $myCon)) die("Selection failed.");
-  mysql_set_charset ( "utf8", $myCon );
+  if (!mysqli_select_db($myCon, $DB)) die("Selection failed.");
+  mysqli_set_charset ($myCon,  "utf8" );
 ?>
