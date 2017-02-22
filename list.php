@@ -10,11 +10,11 @@ switch ($pattern) {
     }
 
     $sqlHead = "SELECT count(BBStopics.id) id_count FROM BBStopics";
-    $rowsHead = mysql_query($sqlHead);
+    $rowsHead = mysqli_query($myCon, $sqlHead);
     if (!$rowsHead) {
-      die(mysql_error());
+      die(mysqli_error());
     }
-    if ($rowHead = mysql_fetch_array($rowsHead)) {
+    if ($rowHead = mysqli_fetch_array($rowsHead)) {
       if ($rowHead['id_count'] >= $page_number) {
         $pager = createPager($page_number, $rowHead['id_count'], ConstParam::BoardTopicCount, ConstParam::Pager, GetParam::PageNumber);
       } else {
@@ -36,11 +36,11 @@ switch ($pattern) {
                ."  ON postsC.topic_id = BBStopics.id "
                ."ORDER BY BBStopics.updated DESC";
 
-    $rowsHead = mysql_query($sqlHead, $myCon);
+    $rowsHead = mysqli_query($myCon, $sqlHead);#, $myCon);
     if (!$rowsHead) {
-      die(mysql_error());
+      die(mysqli_error());
     }
-    while($rowHead = mysql_fetch_array($rowsHead)) {
+    while($rowHead = mysqli_fetch_array($rowsHead)) {
       echo "<div class=\"topic\">";
       echo createTopicHtml($rowHead['topic_id'], $rowHead['title'], $rowHead['writer'], 
                          $rowHead['twitter_id'], $rowHead['mixi_id'], $rowHead['facebook_id'], 
@@ -53,12 +53,12 @@ switch ($pattern) {
       $sqlPost .= "FROM BBSposts WHERE BBSposts.topic_id = {$rowHead['topic_id']} "
                  ."AND BBSposts.id != 0 "
                  ."ORDER BY BBSposts.id DESC LIMIT 0, ".(string)ConstParam::BoardTopicCommentCount;
-      $rowsPost = mysql_query($sqlPost, $myCon);
+      $rowsPost = mysqli_query($sqlPost, $myCon);
       if (!$rowsPost) {
-        die(mysql_error());
+        die(mysqli_error());
       }
       $html = "";
-      while($rowPost = mysql_fetch_array($rowsPost)) {
+      while($rowPost = mysqli_fetch_array($rowsPost)) {
         $html = createCommentHtml($rowHead['topic_id'], $rowPost['post_id'], $rowPost['title'], $rowPost['writer'], 
                                $rowPost['twitter_id'], $rowPost['mixi_id'], $rowPost['facebook_id'],
                                $rowPost['color'], nl2br($rowPost['message']), $rowPost['created'], $rowPost['modified'])
@@ -81,17 +81,17 @@ switch ($pattern) {
     $topic_id = (int)$_GET[GetParam::TopicId];
     /* create pager - start - */
     $sqlHead = "SELECT count(BBSposts.id) id_count FROM BBSposts WHERE BBSposts.topic_id = {$topic_id}";
-    $rowsHead = mysql_query($sqlHead);
+    $rowsHead = mysqli_query($sqlHead);
     if (!$rowsHead) {
-      die(mysql_error());
+      die(mysqli_error());
     }
     $sqlPost = "SELECT count(BBSposts.id) id_count FROM BBSposts WHERE BBSposts.topic_id = {$topic_id} AND id BETWEEN 1 AND {$_GET[GetParam::PostId]}";
-    $rowsPost = mysql_query($sqlPost);
+    $rowsPost = mysqli_query($sqlPost);
     if (!$rowsPost) {
-      die(mysql_error());
+      die(mysqli_error());
     }
-    if ($rowHead = mysql_fetch_array($rowsHead)) {
-      if ($rowPost = mysql_fetch_array($rowsPost)) {
+    if ($rowHead = mysqli_fetch_array($rowsHead)) {
+      if ($rowPost = mysqli_fetch_array($rowsPost)) {
         $page_number = ceil($rowPost['id_count'] / ConstParam::BoardTopicCount);
 
         if ($rowHead['id_count'] >= $page_number) {
@@ -113,11 +113,11 @@ switch ($pattern) {
     $sqlHead .= "FROM BBStopics "
                ."JOIN BBSposts ON BBSposts.topic_id = BBStopics.id AND BBSposts.id = 0 "
                ."WHERE BBStopics.id = {$topic_id}";
-    $rowsHead = mysql_query($sqlHead, $myCon);
+    $rowsHead = mysqli_query($sqlHead, $myCon);
     if (!$rowsHead) {
-      die(mysql_error());
+      die(mysqli_error());
     }
-    if ($rowHead = mysql_fetch_array($rowsHead)) {
+    if ($rowHead = mysqli_fetch_array($rowsHead)) {
       echo "  <div class=\"topic\">";
       echo createTopicHtml($topic_id, $rowHead['title'], $rowHead['writer'], 
                          $rowHead['twitter_id'], $rowHead['mixi_id'], $rowHead['facebook_id'], 
@@ -129,13 +129,13 @@ switch ($pattern) {
       $sqlPost .= "FROM BBSposts WHERE BBSposts.topic_id = {$topic_id} "
                  ."AND BBSposts.id != 0 "
                  ."ORDER BY BBSposts.id DESC LIMIT 0, ".(string)ConstParam::TopicCommentCount;
-      $rowsPost = mysql_query($sqlPost, $myCon);
+      $rowsPost = mysqli_query($sqlPost, $myCon);
       if (!$rowsPost) {
-        die(mysql_error());
+        die(mysqli_error());
       }
       $post_id = 1;
       $html = "";
-      while($rowPost = mysql_fetch_array($rowsPost)) {
+      while($rowPost = mysqli_fetch_array($rowsPost)) {
         $post_id = $rowPost['post_id'];
         $html = createCommentHtml($rowHead['topic_id'], $rowPost['post_id'], $rowPost['title'], $rowPost['writer'], 
                                $rowPost['twitter_id'], $rowPost['mixi_id'], $rowPost['facebook_id'],
@@ -151,18 +151,18 @@ switch ($pattern) {
 
     echo "<hr />";
     $sqlHead = "SELECT count(BBSposts.id) id_count FROM BBSposts WHERE BBSposts.topic_id = {$topic_id}";
-    $rowsHead = mysql_query($sqlHead);
+    $rowsHead = mysqli_query($sqlHead);
     if (!$rowsHead) {
-      die(mysql_error());
+      die(mysqli_error());
     }
     $sqlPost = "SELECT count(BBSposts.id) id_count FROM BBSposts WHERE BBSposts.topic_id = {$topic_id} AND id BETWEEN 1 AND {$_GET[GetParam::PostId]}";
-    $rowsPost = mysql_query($sqlPost);
+    $rowsPost = mysqli_query($sqlPost);
     if (!$rowsPost) {
-      die(mysql_error());
+      die(mysqli_error());
     }
 
-    if ($rowHead = mysql_fetch_array($rowsHead)) {
-      if ($rowPost = mysql_fetch_array($rowsPost)) {
+    if ($rowHead = mysqli_fetch_array($rowsHead)) {
+      if ($rowPost = mysqli_fetch_array($rowsPost)) {
         $page_number = ceil($rowPost['id_count'] / ConstParam::BoardTopicCount);
 
         if ($rowHead['id_count'] >= $page_number) {
@@ -184,11 +184,11 @@ switch ($pattern) {
     }
 
     $sqlPost = "SELECT count(BBSposts.id) id_count FROM BBSposts WHERE BBSposts.topic_id = {$topic_id}";
-    $rowsPost = mysql_query($sqlPost);
+    $rowsPost = mysqli_query($sqlPost);
     if (!$rowsPost) {
-      die(mysql_error());
+      die(mysqli_error());
     }
-    if ($rowPost = mysql_fetch_array($rowsPost)) {
+    if ($rowPost = mysqli_fetch_array($rowsPost)) {
       if ($rowPost['id_count'] >= $page_number) {
         $pager = createPager($page_number, $rowPost['id_count'], ConstParam::TopicCommentCount, ConstParam::Pager, 
                         GetParam::TopicId."={$topic_id}&".GetParam::PageNumber);
@@ -207,12 +207,12 @@ switch ($pattern) {
                ."JOIN BBSposts ON BBSposts.topic_id = BBStopics.id AND BBSposts.id = 0 "
                ."WHERE BBStopics.id = {$topic_id}";
 
-    $rowsHead = mysql_query($sqlHead, $myCon);
+    $rowsHead = mysqli_query($sqlHead, $myCon);
     if (!$rowsHead) {
-      die(mysql_error());
+      die(mysqli_error());
     }
     $n = ($page_number - 1) * ConstParam::TopicCommentCount;
-    if ($rowHead = mysql_fetch_array($rowsHead)) {
+    if ($rowHead = mysqli_fetch_array($rowsHead)) {
       $htmlTitle = $rowHead['title'];
       echo "  <div class=\"topic\">";
       echo createTopicHtml($rowHead['topic_id'], $rowHead['title'], $rowHead['writer'], 
@@ -226,13 +226,13 @@ switch ($pattern) {
       $sqlPost .= "FROM BBSposts WHERE BBSposts.topic_id = {$topic_id} "
                  ."AND BBSposts.id != 0 "
                  ."ORDER BY BBSposts.id DESC LIMIT {$n}, ".(string)ConstParam::TopicCommentCount;
-      $rowsPost = mysql_query($sqlPost, $myCon);
+      $rowsPost = mysqli_query($sqlPost, $myCon);
       if (!$rowsPost) {
-        die(mysql_error());
+        die(mysqli_error());
       }
       $post_id = 1;
       $html = "";
-      while($rowPost = mysql_fetch_array($rowsPost)) {
+      while($rowPost = mysqli_fetch_array($rowsPost)) {
         $post_id = $rowPost['post_id'];
         $html = createCommentHtml($topic_id, $rowPost['post_id'], $rowPost['title'], $rowPost['writer'], 
                                $rowPost['twitter_id'], $rowPost['mixi_id'], $rowPost['facebook_id'],
@@ -259,11 +259,11 @@ switch ($pattern) {
     
     /* create pager - start - */
     $sqlHead = "SELECT count(BBStopics.id) id_count FROM BBStopics";
-    $rowsHead = mysql_query($sqlHead);
+    $rowsHead = mysqli_query($sqlHead);
     if (!$rowsHead) {
-      die(mysql_error());
+      die(mysqli_error());
     }
-    if ($rowHead = mysql_fetch_array($rowsHead)) {
+    if ($rowHead = mysqli_fetch_array($rowsHead)) {
       if ($rowHead['id_count'] >= $page_number) {
         $pager = createPager($page_number, $rowHead['id_count'], ConstParam::SummeryCount, ConstParam::Pager, GetParam::SummeryNumber);
       } else {
@@ -284,14 +284,14 @@ switch ($pattern) {
                ."JOIN BBSposts A ON A.topic_id = BBStopics.id AND A.id = 0 "
                ."JOIN BBSposts B ON B.topic_id = BBStopics.id ";
     $sqlHead .= "GROUP BY BBStopics.id ORDER BY BBStopics.updated DESC";
-    $rowsHead = mysql_query($sqlHead, $myCon);
+    $rowsHead = mysqli_query($sqlHead, $myCon);
     if (!$rowsHead) {
-      die(mysql_error());
+      die(mysqli_error());
     }
 
     echo '<div id="topicList">';
     $html .= '<div id="topicList">';
-    while ($rowHead = mysql_fetch_array($rowsHead)) {
+    while ($rowHead = mysqli_fetch_array($rowsHead)) {
       echo $rowHead['id']." <a href=\"{$_SERVER['PHP_SELF']}?topic_id={$rowHead['id']}\">".$rowHead['title']."(".$rowHead['posts_count'].")</a><br />\n";
       $html .= $rowHead['id']." <a href=\"{$_SERVER['PHP_SELF']}?topic_id={$rowHead['id']}\">".$rowHead['title']."(".$rowHead['posts_count'].")</a><br />\n";
     }

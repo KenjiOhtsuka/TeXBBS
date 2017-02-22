@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $error_message .= "タイトルを30文字以内で入力してください。<br />";
     } else {
       $title = htmlspecialchars($title);
-      $title = mysql_real_escape_string($title);
+      $title = mysqli_real_escape_string($title);
     }
  
     $writer = $_POST['writer'];
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $error_message .= "名前を20文字以内で入力してください。<br />";
     } else {
       $writer = htmlspecialchars($writer);
-      $writer = mysql_real_escape_string($writer);
+      $writer = mysqli_real_escape_string($writer);
     }
     $message = $_POST['message'];
     if (empty($message) || (mb_strlen($message) > 20000)) {
@@ -27,11 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       //$message = htmlspecialchars($message);
       $message = str_replace('<', '&lt;', $message);
       $message = str_replace('>', '&gt;', $message);
-      $message = mysql_real_escape_string($message);
+      $message = mysqli_real_escape_string($message);
     }
     //$message = nl2br($message);
     $twitter_id = htmlspecialchars($_POST['twitterID']);
-    $twitter_id = mysql_real_escape_string($twitter_id);
+    $twitter_id = mysqli_real_escape_string($twitter_id);
     $mixi_id = $_POST['mixiID'];
     if (!empty($mixi_id)) {
       if (preg_match('/^[1-9][0-9]{0,9}$/', $mixi_id) == 1) {
@@ -41,14 +41,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     }
     $facebook_id = htmlspecialchars($_POST['facebookID']);
-    $facebook_id = mysql_real_escape_string($facebook_id);
+    $facebook_id = mysqli_real_escape_string($facebook_id);
     //$url = htmlspecialchars($_POST['url']);
     $color = htmlspecialchars($_POST['color']);
     $password = $_POST['password'];
     if (mb_strlen($password, "utf-8") <= 20 &&
         preg_match('/[a-zA-Z0-9]*/', $password)) {
       $password = htmlspecialchars($password);
-      $password = mysql_real_escape_string($password);
+      $password = mysqli_real_escape_string($password);
       $password = sha1($password.ConstText::PasswordSalt);
     } else {
       $error_message .= 'パスワードは半角英数20文字で入力してください。<br />';
@@ -68,14 +68,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($error_message == '') {
       switch ($post_pattern) {
         case PostType::Edit:
-          $result = mysql_query("SELECT password FROM BBSposts WHERE topic_id = ".$topic_id." AND id = ".$post_id);
-          if ($result && ($temp = mysql_fetch_array($result))) {
+          $result = mysqli_query($dbCon, "SELECT password FROM BBSposts WHERE topic_id = ".$topic_id." AND id = ".$post_id);
+          if ($result && ($temp = mysqli_fetch_array($result))) {
             if (!($temp['password'] == $password)) {
               $error_message .=  "パスワードが違います。<br />";
               break;
             }
           } else {
-            //echo mysql_error();
+            //echo mysqli_error();
             $error_message .= "その投稿は存在しません。";
             break;
           } 
@@ -85,15 +85,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       ."twitter_id = '{$twitter_id}', mixi_id = '{$mixi_id}', facebook_id = '{$facebook_id}', "
                       ."color = '{$color}', modified = NOW() + INTERVAL 14 HOUR "
                       ."WHERE topic_id = {$topic_id} AND id = {$post_id} AND password = '{$password}'";
-            if (!mysql_query($sqlPost)) {
-              echo mysql_error();
+            if (!mysqli_query($sqlPost)) {
+              echo mysqli_error();
               $error_mesage .= "更新に失敗しました。<br />";
               break;
             }
             if ($error_message == '') {
               $sqlPost = "UPDATE BBStopics SET updated = now() + INTERVAL 14 HOUR WHERE id = {$topic_id}";
-              if (!mysql_query($sqlPost)) {
-                echo mysql_error();
+              if (!mysqli_query($sqlPost)) {
+                echo mysqli_error();
                 $error_message .= "トピック時刻更新に失敗しました。";
                 break;
               }
@@ -102,15 +102,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           break;
 
         case PostType::Reply:
-          $result = mysql_query("SELECT max(id) max_id FROM BBSposts WHERE topic_id = ".$topic_id);
+          $result = mysqli_query("SELECT max(id) max_id FROM BBSposts WHERE topic_id = ".$topic_id);
           if (!$result) {
-            echo mysql_error();
+            echo mysqli_error();
             echo "そのトピックは存在しません。";
             break;
           }
           if ($error_message == '') {
             $post_id = 0;
-            if ($temp = mysql_fetch_array($result)) {
+            if ($temp = mysqli_fetch_array($result)) {
               $post_id = $temp['max_id'] + 1;
             } else {
               $error_message .= "そのトピックは存在しません。";
@@ -123,14 +123,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sqlPost .= "VALUES({$post_id}, {$topic_id}, '{$writer}', '{$title}', '{$message}', "
                       ."'{$twitter_id}', '{$mixi_id}', '{$facebook_id}', '{$url}', '{$color}', "
                       ."'{$password}', now() + INTERVAL 14 HOUR)";
-            if (!mysql_query($sqlPost)) {
-              echo mysql_error();
+            if (!mysqli_query($sqlPost)) {
+              echo mysqli_error();
               $error_message .= "投稿に失敗しました。<br />";
               break;
             }
             $sqlPost = "UPDATE BBStopics SET updated = now() + INTERVAL 14 HOUR WHERE id = {$topic_id}";
-            if (!mysql_query($sqlPost)) {
-              echo mysql_error();
+            if (!mysqli_query($sqlPost)) {
+              echo mysqli_error();
               $error_message .= "トピック時刻更新に失敗しました。<br />";
               break;
             }
@@ -138,20 +138,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           break;
 
         case PostType::Topic:
-          if (!mysql_query("INSERT INTO BBStopics(updated) VALUES(now() + INTERVAL 14 HOUR)")) {
-            //die(mysql_error());
+          if (!mysqli_query($myCon, "INSERT INTO BBStopics(updated) VALUES(now() + INTERVAL 14 HOUR)")) {
+            //die(mysqli_error());
             $error_message .= "データベースエラーが発生しました。";
           }
           if ($error_message == '') {
-            $result = mysql_query("SELECT max(id) max_id FROM BBStopics");
+            $result = mysqli_query($myCon, "SELECT max(id) max_id FROM BBStopics");
             $topic_id = 0;
             if (!$result) {
-              //echo mysql_error();
+              //echo mysqli_error();
               $error_message .= "データベースエラーが発生しました。";
               break;
             } else {
               global $topic_id, $result;
-              if ($temp = mysql_fetch_array($result)) {
+              if ($temp = mysqli_fetch_array($result)) {
                 global $topic_id;
                 $topic_id = $temp['max_id'];
               }
@@ -162,10 +162,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sqlPost .= "VALUES(0, {$topic_id}, '{$writer}', '{$title}', '{$message}', "
                       ."'{$twitter_id}', '{$mixi_id}', '{$facebook_id}', '{$url}', '{$color}', "
                       ."'{$password}', now() + INTERVAL 14 HOUR)";
-            if (!mysql_query($sqlPost)) {
-              echo mysql_error();
-              mysql_query("DELETE FROM BBStopics WHERE id = {$topic_id}");
-              echo mysql_error();
+            if (!mysqli_query($myCon, $sqlPost)) {
+              echo mysqli_error();
+              mysqli_query($myCon, "DELETE FROM BBStopics WHERE id = {$topic_id}");
+              echo mysqli_error();
               break;
             }
           }
@@ -183,7 +183,7 @@ if ($error_message != '') {
 switch ($input_type) {
   case InputType::None:
     echo outputForm('index.php', '', $writer, '', $color,
-                   $mixi_id, $tweeter_id, $facebook_id);
+                   $mixi_id, 0, $facebook_id);
     break;
 
   case InputType::Edit:
@@ -196,13 +196,13 @@ switch ($input_type) {
     
     $sqlForm = "SELECT writer, title, message, twitter_id, CASE mixi_id WHEN 0 THEN '' ELSE mixi_id END mixi_id, facebook_id, color FROM BBSposts "
               ."WHERE topic_id = {$topic_id} AND id = {$post_id}";
-    $rowsForm = mysql_query($sqlForm);
+    $rowsForm = mysqli_query($dbCon, $sqlForm);
     if (!$rowsForm) {
-      echo mysql_error();
+      echo mysqli_error();
       break;
     }
 
-    if ($rowForm = mysql_fetch_array($rowsForm)) {
+    if ($rowForm = mysqli_fetch_array($rowsForm)) {
       echo outputForm($_SESSION['PHP_SELF']."?".GetParam::TopicId."=".$topic_id."&".GetParam::PostId."=".$post_id, 
                      $rowForm['title'], $rowForm['writer'], $rowForm['message'], $rowForm['color'],
                      $rowForm['mixi_id'], $rowForm['twitter_id'], $rowForm['facebook_id'], $topic_id, $post_id);
@@ -216,12 +216,12 @@ switch ($input_type) {
       
     $sqlForm = "SELECT title, message FROM BBSposts "
               ."WHERE topic_id = {$topic_id} AND id = {$post_id}";
-    $rowsForm = mysql_query($sqlForm);
+    $rowsForm = mysqli_query($dbCon, $sqlForm);
     if (!$rowsForm) {
-      echo mysql_error();
+      echo mysqli_error();
       break;
     }
-    if ($rowForm = mysql_fetch_array($rowsForm)) {
+    if ($rowForm = mysqli_fetch_array($rowsForm)) {
       $title = "Re: ".$rowForm['title'];
       $title = mb_substr($title, 0, 30, "utf-8");
       echo outputForm($_SESSION['PHP_SELF']."?".GetParam::TopicId."=".$_GET['topic_id'], $title, $writer, $preMessage.$rowForm['message'], $color,
@@ -236,12 +236,12 @@ switch ($input_type) {
       
     $sqlForm = "SELECT title, message FROM BBSposts "
               ."WHERE topic_id = {$topic_id} AND id = {$post_id}";
-    $rowsForm = mysql_query($sqlForm);
+    $rowsForm = mysqli_query($dbCon, $sqlForm);
     if (!$rowsForm) {
-      echo mysql_error();
+      echo mysqli_error();
       break;
     }
-    if ($rowForm = mysql_fetch_array($rowsForm)) {
+    if ($rowForm = mysqli_fetch_array($rowsForm)) {
       $title = "Re: ".$rowForm['title'];
       $title = mb_substr($title, 0, 30, "utf-8");
       echo outputForm($_SESSION['PHP_SELF']."?".GetParam::TopicId."=".$_GET['topic_id'], $title, $writer, $preMessage.$rowForm['message'], $color,
